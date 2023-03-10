@@ -98,6 +98,14 @@ require('lazy').setup({
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
+  { 'lazytanuki/nvim-mapper',
+    config = function()
+      require("nvim-mapper").setup({
+        no_map = false, -- do not assign the default keymap
+        search_path = vim.fn.stdpath("config") .. "/lua",
+      })
+    end,
+  },
   { -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -146,8 +154,19 @@ require('lazy').setup({
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
+  { 'nvim-lua/plenary.nvim' },
+  {'ahmedkhalf/project.nvim'},
   -- Fuzzy Finder (files, lsp, etc)
-  { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
+  { 'nvim-telescope/telescope.nvim', 
+  version = '*',
+  dependencies = { 
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope-fzf-native.nvim" ,
+      "nvim-telescope/telescope-file-browser.nvim" ,
+      "ahmedkhalf/project.nvim"
+    },
+    config = require('custom.config.telescope').setup
+  },
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built.
   -- Only load if `make` is available. Make sure you have the system
@@ -266,6 +285,7 @@ require('telescope').setup {
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
+pcall(require('telescope').load_extension, 'projects')
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
@@ -493,5 +513,366 @@ cmp.setup {
   },
 }
 
+local mapper = require("nvim-mapper")
+local wk = require("which-key")
+
+local map = function(mode, lhs, rhs, opts, category, unique_identifier, description)
+  if description ~= nil then
+    wk.register({ [lhs] = { description } })
+  end
+  mapper.map(mode, lhs, rhs, opts, category, unique_identifier, description)
+end
+local map_buf = function(bufnr, mode, lhs, rhs, opts, category, unique_identifier, description)
+  mapper.map_buf(bufnr, mode, lhs, rhs, opts, category, unique_identifier, description)
+end
+local map_virtual = function(mode, lhs, rhs, opts, category, unique_identifier, description)
+  mapper.map_virtual(mode, lhs, rhs, opts, category, unique_identifier, description)
+end
+local map_buf_virtual = function(mode, lhs, rhs, opts, category, unique_identifier, description)
+  mapper.map_buf_virtual(mode, lhs, rhs, opts, category, unique_identifier, description)
+end
+
+
+-- <SPC>b<TAB>: switch to last buffer
+map("n",
+    "<leader>b<tab>",
+    "<cmd>e #<CR>",
+    { noremap=true, silent=true },
+    "Buffer",
+    "tab_buffer",
+    "Switch to last buffer")
+
+-- <SPC>bb: show all buffers
+map("n",
+    "<leader>bb",
+    "<cmd>lua require('telescope.builtin').buffers({ show_all_buffers=true })<CR>",
+    { noremap=true, silent=true },
+    "Buffer",
+    "switch_buffer",
+    "Switch to other buffer")
+
+-- <SPC>bd: close buffer
+map("n",
+    "<leader>bd",
+    '<cmd>BufDel<CR>', -- ojroques/nvim-bufdel
+    { noremap=true, silent=true },
+    "Buffer",
+    "close_current_buffer",
+    "Close current buffer")
+
+-- <SPC>bs: scratch
+map("n",
+    "<leader>bs",
+    ":enew<CR>",
+    { noremap=true, silent=true },
+    "Buffer",
+    "new_buffer",
+    "Open a new unnamed buffer")
+
+-- <SPC>bn: next buffer
+map("n",
+    "<leader>bn",
+    '<cmd>lua require("bufferline").cycle(1)<CR>',
+    { noremap=true, silent=true },
+    "Buffer",
+    "next_buffer",
+    "Goto next buffer")
+
+-- <SPC>bp: previous buffer
+map("n",
+    "<leader>bp",
+    '<cmd>lua require("bufferline").cycle(-1)<CR>',
+    { noremap=true, silent=true },
+    "Buffer",
+    "prev_buffer",
+    "Goto previous buffer")
+
+-- <SPC>bg: goto buffer
+map("n",
+    "<leader>bg",
+    '<cmd>lua require("bufferline").pick_buffer()<CR>',
+    { noremap=true, silent=true },
+    "Buffer",
+    "goto_buffer",
+    "Goto buffer")
+
+-----------
+-- files --
+-----------
+wk.register({ ["f"] = { name = "+files" } }, { prefix = "<leader>" })
+
+-- <SPC>fe: file explorer
+map("n",
+    "<leader>fe",
+    "<cmd>lua require('nvim-tree').toggle()<CR>",
+    { noremap=true, silent=true },
+    "Files",
+    "file_explorer",
+    "File explorer")
+
+-- <SPC>ff: find file
+map("n",
+    "<leader>ff",
+    "<cmd>lua require('custom.config.telescope').open_file_browser()<CR>",
+    { noremap=true, silent=true },
+    "Files",
+    "find_files",
+    "Find file")
+
+-- <SPC>fs: save file
+map("n",
+    "<leader>fs",
+    "<cmd>w<CR>",
+    { noremap=true, silent=true },
+    "Files",
+    "save_file",
+    "Save file")
+
+-- <SPC>fS: save all file
+map("n",
+    "<leader>fS",
+    "<cmd>wa<CR>",
+    { noremap=true, silent=true },
+    "Files",
+    "save_all_files",
+    "Save all files")
+
+-- <SPC>fr: find recent file
+map("n",
+    "<leader>fr",
+    "<cmd>lua require('telescope.builtin').oldfiles()<CR>",
+    { noremap=true, silent=true },
+    "Files",
+    "find_recent_files",
+    "Find recently opened file")
+
+-- <SPC>/: grep for word
+map("n",
+    "<leader>/",
+    "<cmd>lua require('telescope.builtin').live_grep()<CR>",
+    { noremap=true, silent=true },
+    "Files",
+    "file_grep_shortcut",
+    "Grep in current file")
+
+-- <SPC>fg: file grep
+map("n",
+    "<leader>fg",
+    "<cmd>lua require('telescope.builtin').live_grep()<CR>",
+    { noremap=true, silent=true },
+    "Files",
+    "file_grep",
+    "Grep in current file")
+
+-- <SPC>*: grep for word under cursor
+map("n",
+    "<leader>*",
+    "<cmd>lua require('telescope.builtin').live_grep({ default_text = vim.fn.expand('<cword>') })<CR>",
+    { noremap=true, silent=true },
+    "Files",
+    "string_grep_shortcut",
+    "Grep for word under cursor in current file")
+
+-- <SPC>fG: string grep
+map("n",
+    "<leader>fG",
+    "<cmd>lua require('telescope.builtin').live_grep({ default_text = vim.fn.expand('<cword>') })<CR>",
+    { noremap=true, silent=true },
+    "Files",
+    "string_grep",
+    "Grep for word under cursor in current file")
+-------------
+-- project --
+-------------
+wk.register({ ["p"] = { name = "+projects" } }, { prefix = "<leader>" })
+
+-- <SPC>pp: projects
+map("n",
+    "<leader>pp",
+    -- "<cmd>lua require('custom.config.telescope').open_projects()<CR>",
+    "<cmd>lua require('telescope').extensions.projects.projects()<CR>",
+    { noremap=true, silent=true },
+    "Projects",
+    "telescope_project",
+    "Projects")
+
+-- <SPC>pb: show project buffers
+map("n",
+    "<leader>pb",
+    "<cmd>lua require('telescope.builtin').buffers({ cwd_only=true })<CR>",
+    { noremap=true, silent=true },
+    "Projects",
+    "switch_project_buffer",
+    "Switch to other project buffer")
+
+-- <SPC>pf: find file in project
+map("n",
+    "<leader>pf",
+    "<cmd>lua require('telescope.builtin').git_files()<CR>",
+    { noremap=true, silent=true },
+    "Projects",
+    "git_files",
+    "Find file in project")
+
+-- <SPC>pa: add project
+map("n",
+    "<leader>pa",
+    "<cmd>lua require('custom.config.telescope').switch_projects()<CR>",
+    { noremap=true, silent=true },
+    "Projects",
+    "add_project",
+    "Add project")
+
+------------
+-- search --
+------------
+wk.register({ ["s"] = { name = "+search" } }, { prefix = "<leader>" })
+
+-- <SPC>sc: clear search highlight
+map("n",
+    "<leader>sc",
+    "<cmd>nohl<CR>",
+    { noremap=true, silent=true },
+    "Search",
+    "nohl",
+    "Clear search highlight")
+
+-- <SPC>ss: fuzzy search
+map("n",
+    "<leader>ss",
+    "<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<CR>",
+    { noremap=true, silent=true },
+    "Search",
+    "fuzzy_search",
+    "Search in buffer")
+
+-- <SPC>ss: fuzzy search current word
+map("n",
+    "<leader>sS",
+    "<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find({ default_text = vim.fn.expand('<cword>') })<CR>",
+    { noremap=true, silent=true },
+    "Search",
+    "fuzzy_search_word",
+    "Search word under cursor in buffer")
+
+map("n",
+    "<leader>sd",
+    "<cmd>lua require('custom.config.telescope').search_current_directory()<CR>",
+    { noremap=true, silent=true },
+    "Search",
+    "fuzzy_search_directory",
+    "Search in current directory")
+
+map("n",
+    "<leader>sD",
+    "<cmd>lua require('custom.config.telescope').search_current_directory({ default_text = vim.fn.expand('<cword>') })<CR>",
+    { noremap=true, silent=true },
+    "Search",
+    "fuzzy_search_directory_word",
+    "Search word under cursor in current directory")
+
+-------------
+-- buffers --
+-------------
+wk.register({ ["r"] = { name = "+resume" } }, { prefix = "<leader>" })
+
+-- <SPC>rl: resume last
+map("n",
+    "<leader>rl",
+    "<cmd>lua require('telescope.builtin').resume()<CR>",
+    { noremap=true, silent=true },
+    "Resume",
+    "resume_last",
+    "Resume last telescope finder")
+    --
+-- <SPC>rl: resume last
+map("n",
+    "<leader>o",
+    "<cmd>ClangdSwitchSourceHeader<CR>",
+    { noremap=true, silent=true },
+    "clangd",
+    "clang_swithc",
+    "Clangd switch sorce header")
+
+----------
+-- text --
+----------
+wk.register({ ["x"] = { name = "+text" } }, { prefix = "<leader>" })
+
+-- <SPC>xa: text align
+map("v",
+    "<leader>xa",
+    ":EasyAlign<CR>",
+    { noremap=true, silent=true },
+    "Text",
+    "text_align",
+    "Align text")
+
+-- vim.api.nvim_set_keymap('v', "<leader>xa", ":EasyAlign<CR>", opts)
+-- vim.api.nvim_set_keymap('x', "<leader>xa", ":EasyAlign<CR>", opts)
+
+--map("x",
+--    "<leader>xl",
+--    "<cmd>EasyAlign<CR>",
+--    { noremap=true, silent=true },
+--    "Text",
+--    "text_align_visual",
+--    "Align text")
+map("n",
+    ",t",
+    "<cmd>tab split<CR>",
+    { noremap=true, silent=true },
+    "Tabs",
+    "tab_create_new",
+    "Create tab")
+map("n",
+    ",.",
+    "<cmd>tabnext<CR>",
+    { noremap=true, silent=true },
+    "Tabs",
+    "tab_go_next",
+    "Go to next tab")
+
+map("n",
+    ",m",
+    "<cmd>tabprevious<CR>",
+    { noremap=true, silent=true },
+    "Tabs",
+    "tab_go_previeous",
+    "Go to previous tab")
+
+map("n",
+    "<C-h>",
+    "<C-w>h",
+    { noremap=true, silent=true },
+    "Move to left window",
+    "window_move_left",
+    "Move to left window")
+
+map("n",
+    "<C-j>",
+    "<C-w>j",
+    { noremap=true, silent=true },
+    "Move window down",
+    "window_move_down",
+    "Move down window")
+
+
+
+map("n",
+    "<C-k>",
+    "<C-w>k",
+    { noremap=true, silent=true },
+    "Move to up window",
+    "window_move_up",
+    "Move to up window")
+
+map("n",
+    "<C-l>",
+    "<C-w>l",
+    { noremap=true, silent=true },
+    "Move window right",
+    "window_move_right",
+    "Move right window")
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

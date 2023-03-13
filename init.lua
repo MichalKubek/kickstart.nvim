@@ -157,6 +157,7 @@ require('lazy').setup({
   { 'nvim-lua/plenary.nvim' },
   {'ahmedkhalf/project.nvim'},
   -- Fuzzy Finder (files, lsp, etc)
+  { 'dominikduda/vim_current_word'},
   { 'nvim-telescope/telescope.nvim', 
   version = '*',
   dependencies = { 

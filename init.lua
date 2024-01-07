@@ -266,7 +266,7 @@ require('lazy').setup({
 -- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
-vim.o.hlsearch = false
+vim.o.hlsearch = true
 
 -- Make line numbers default
 vim.wo.number = true
@@ -547,6 +547,7 @@ require('which-key').register({
 require('mason').setup()
 require('mason-lspconfig').setup()
 
+--[[
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
 --
@@ -597,6 +598,7 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+--]]
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
@@ -625,9 +627,10 @@ cmp.setup {
       select = true,
     },
     ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_locally_jumpable() then
+--      if cmp.visible() then
+--        cmp.select_next_item()
+--      elseif
+      if luasnip.expand_or_locally_jumpable() then
         luasnip.expand_or_jump()
       else
         fallback()
@@ -644,15 +647,20 @@ cmp.setup {
     end, { 'i', 's' }),
   },
   sources = {
-    { name = 'nvim_lsp' },
     { name = 'luasnip' },
+    { name = 'nvim_lsp' },
     { name = 'path' },
   },
 }
 
 require('custom.mason').setup()
 require('custom.keymaps').setup()
+vim.o.hlsearch = true
+vim.wo.relativenumber = true
+vim.opt.spelllang = 'en_us'
+vim.opt.spell = true
 -- #require('custom.keymaps').setup()
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

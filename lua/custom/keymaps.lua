@@ -16,7 +16,10 @@ function M.setup()
 	M.projects()
 	M.tabs()
 	M.files()
+	M.spell()
+	M.git()
 end
+
 
 function M.tabs()
 
@@ -76,6 +79,55 @@ function M.tabs()
 		"Move window right",
 		"window_move_right",
 		"Move right window")
+
+end
+
+
+function M.spell()
+	wk.register({ ["l"] = { name = "+spe[L]l" } }, { prefix = "<leader>" })
+	map("n",
+		"<leader>l]",
+		"]s",
+		{ noremap=true, silent=true },
+		"Spell",
+		"spell_go_next",
+		"]s Move to next misspelled word")
+	map("n",
+		"<leader>l[",
+		"[s",
+		{ noremap=true, silent=true },
+		"Spell",
+		"spell_go_prev",
+		"[s Move to previous misspelled word")
+	map("n",
+		"<leader>lg",
+		"zg",
+		{ noremap=true, silent=true },
+		"Spell",
+		"spell_good",
+		"zg Add word under the cursor as a good word")
+	map("n",
+		"<leader>lw",
+		"zw",
+		{ noremap=true, silent=true },
+		"Spell",
+		"spell_bad",
+		"zw Like 'zg' but mark the word as a wrong (bad) word.")
+	map("n",
+		"<leader>l=",
+		"z=",
+		{ noremap=true, silent=true },
+		"Spell",
+		"spell_suggest",
+		"z= suggest correct spelled word")
+	map("n",
+		"<leader>lr",
+		"<cmd>spellr<CR>",
+		{ noremap=true, silent=true },
+		"Spell",
+		"spell_repeat",
+		":spellr  Repeat the replacement done by z= for all matches")
+
 
 end
 
@@ -140,7 +192,6 @@ function M.files()
 		"File explorer")
 
 	-- <SPC>ff: find file
-	local lol = require('custom.telescope')
 	map("n",
 		"<leader>ff",
 		"<cmd>lua require('custom.telescope').open_file_browser()<CR>",
@@ -211,8 +262,73 @@ function M.files()
 		"Files",
 		"string_grep",
 		"Grep for word under cursor in current file")
-	vim.keymap.set('n', '<leader>b', require('telescope.builtin').buffers, { desc = '[b] Find existing buffers' })
 
+end
+
+function M.git()
+	map("n",
+		"<leader>gs",
+		"<cmd>Git<CR>",
+		{ noremap=true, silent=true },
+		"Git",
+		"git_status",
+		"Git [S]status")
+	map("n",
+		"<leader>ga",
+		"<cmd>Gwrite<CR>",
+		{ noremap=true, silent=true },
+		"Git",
+		"git_add",
+		"Git [A]dd")
+	map("n",
+		"<leader>gc",
+		"<cmd>Git commit<CR>",
+		{ noremap=true, silent=true },
+		"Git",
+		"git_commit",
+		"Git [C]ommit")
+	map("n",
+		"<leader>gh",
+		"<cmd>Gread<CR>",
+		{ noremap=true, silent=true },
+		"Git",
+		"git_read",
+		"Git c[H]eckout")
+	map("n",
+		"<leader>gr",
+		"<cmd>Gremove<CR>",
+		{ noremap=true, silent=true },
+		"Git",
+		"git_remove",
+		"Git [R]m")
+	map("n",
+		"<leader>gb",
+		"<cmd>G blame<CR>",
+		{ noremap=true, silent=true },
+		"Git",
+		"git_blame",
+		"Git [B]lame")
+	map("n",
+		"<leader>gl",
+		"<cmd>Gclog -40<CR>",
+		{ noremap=true, silent=true },
+		"Git",
+		"git_log",
+		"Git [L]og -40")
+	map("n",
+		"<leader>gp",
+		"<cmd>Git pull<CR>",
+		{ noremap=true, silent=true },
+		"Git",
+		"git_pull",
+		"Git [P]ull")
+	map("n",
+		"<leader>gu",
+		"<cmd>Git push<CR>",
+		{ noremap=true, silent=true },
+		"Git",
+		"git_push",
+		"Git p[U]sh")
 end
 
 return M

@@ -58,7 +58,7 @@ local servers = {
       plugins = {
 	pycodestyle = {
 	  ignore = {'W391'},
-	  maxLineLength = 100
+	  maxLineLength = 130
 	},
 	ruff = {
 	  enabled = true,  -- Enable the plugin

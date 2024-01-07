@@ -47,10 +47,11 @@ local servers = {
 
   lua_ls = {
     Lua = {
-      workspace = { checkThirdParty = false },
+      workspace = {
+	checkThirdParty = false,
+	library = vim.api.nvim_get_runtime_file("", true),
+      },
       telemetry = { enable = false },
-      -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-      -- diagnostics = { disable = { 'missing-fields' } },
     },
   },
   pylsp = {

@@ -51,9 +51,6 @@ local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
     'git',
-    'clone',
-    '--filter=blob:none',
-    'https://github.com/folke/lazy.nvim.git',
     '--branch=stable', -- latest stable release
     lazypath,
   }
@@ -108,7 +105,8 @@ require('lazy').setup({
       'hrsh7th/cmp-path',
 
       -- Adds a number of user-friendly snippets
-      'rafamadriz/friendly-snippets',
+--      'rafamadriz/friendly-snippets',
+      'honza/vim-snippets',
     },
   },
 
@@ -660,7 +658,12 @@ vim.wo.relativenumber = true
 vim.opt.spelllang = 'en_us'
 vim.opt.spell = true
 -- #require('custom.keymaps').setup()
+local ls = require("luasnip")
+ls.filetype_extend("all", { "_" })
 
+require("luasnip.loaders.from_snipmate").load() -- { include = { "c" } }) -- Load only python snippets
+--require("luasnip.loaders.from_snipmate").load({ path = { "/home/miso/.config/nvim/vim-snippets/snippets" } })
+require("luasnip.loaders.from_snipmate").lazy_load()
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

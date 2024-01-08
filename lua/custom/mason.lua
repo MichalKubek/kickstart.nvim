@@ -58,7 +58,7 @@ local servers = {
     pylsp = {
       plugins = {
 	pycodestyle = {
-	  ignore = {'W391'},
+	  ignore = {'W391', 'W191'},
 	  maxLineLength = 130
 	},
 	ruff = {
@@ -75,7 +75,7 @@ local servers = {
 	  lineLength = 100,  -- Line length to pass to ruff checking and formatting
 	  exclude = { "__about__.py" },  -- Files to be excluded by ruff checking
 	  select = { "F" },  -- Rules to be enabled by ruff
-	  ignore = { "D210" },  -- Rules to be ignored by ruff
+	  ignore = { "D210", "W191" },  -- Rules to be ignored by ruff
 	  perFileIgnores = { ["__init__.py"] = "CPY001" },  -- Rules that should be ignored for specific files
 	  preview = false,  -- Whether to enable the preview style linting and formatting.
 	  targetVersion = "py310",  -- The minimum python version to target (applies for both linting and formatting).

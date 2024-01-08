@@ -18,6 +18,7 @@ function M.setup()
 	M.files()
 	M.spell()
 	M.git()
+	M.hunk()
 end
 
 
@@ -331,4 +332,13 @@ function M.git()
 		"Git p[U]sh")
 end
 
+function M.hunk()
+        local gs = package.loaded.gitsigns
+        local function hmap(mode, l, r, opts)
+          opts = opts or {}
+          vim.keymap.set(mode, l, r, opts)
+        end
+        hmap('n', '<leader>h]', gs.next_hunk, { desc = ']c Next hunk' })
+        hmap('n', '<leader>h[', gs.prev_hunk, { desc = '[c Previous hunk' })
+end
 return M

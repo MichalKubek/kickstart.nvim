@@ -43,6 +43,8 @@ P.S. You can delete this when you're done too. It's your config now :)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+--vim.opt.guifont='SauceCodePro Nerd Font'
+vim.opt.guifont= 'SauceCodePro Nerd Font:h15'
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
@@ -661,9 +663,13 @@ vim.opt.spell = true
 local ls = require("luasnip")
 ls.filetype_extend("all", { "_" })
 
+
 require("luasnip.loaders.from_snipmate").load() -- { include = { "c" } }) -- Load only python snippets
 --require("luasnip.loaders.from_snipmate").load({ path = { "/home/miso/.config/nvim/vim-snippets/snippets" } })
 require("luasnip.loaders.from_snipmate").lazy_load()
+vim.opt.guifont='SauceCodePro Nerd Font:h15'
+---#vim.opt.guifont='Symbols Nerd Font Mono:style=Regular'
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

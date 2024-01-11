@@ -19,7 +19,10 @@ function M.setup()
 	M.spell()
 	M.git()
 	M.hunk()
+	M.test()
+	M.buffers()
 end
+
 
 
 function M.tabs()
@@ -186,7 +189,7 @@ function M.files()
 	-- <SPC>fe: file explorer
 	map("n",
 		"<leader>fe",
-		"<cmd>lua require('nvim-tree').toggle()<CR>",
+		"<cmd>lua require('nvim-tree').tree.toggle()<CR>",
 		{ noremap=true, silent=true },
 		"Files",
 		"file_explorer",
@@ -273,63 +276,204 @@ function M.git()
 		{ noremap=true, silent=true },
 		"Git",
 		"git_status",
-		"Git [S]status")
+		"Git [s]status")
 	map("n",
 		"<leader>ga",
 		"<cmd>Gwrite<CR>",
 		{ noremap=true, silent=true },
 		"Git",
 		"git_add",
-		"Git [A]dd")
+		"Git [a]dd")
 	map("n",
 		"<leader>gc",
 		"<cmd>Git commit<CR>",
 		{ noremap=true, silent=true },
 		"Git",
 		"git_commit",
-		"Git [C]ommit")
+		"Git [c]ommit")
 	map("n",
 		"<leader>gh",
 		"<cmd>Gread<CR>",
 		{ noremap=true, silent=true },
 		"Git",
 		"git_read",
-		"Git c[H]eckout")
+		"Git c[h]eckout")
 	map("n",
 		"<leader>gr",
 		"<cmd>Gremove<CR>",
 		{ noremap=true, silent=true },
 		"Git",
 		"git_remove",
-		"Git [R]m")
+		"Git [r]m")
 	map("n",
 		"<leader>gb",
-		"<cmd>G blame<CR>",
+		"<cmd>Git blame<CR>",
 		{ noremap=true, silent=true },
 		"Git",
 		"git_blame",
-		"Git [B]lame")
+		"Git [b]lame")
 	map("n",
 		"<leader>gl",
 		"<cmd>Gclog -40<CR>",
 		{ noremap=true, silent=true },
 		"Git",
 		"git_log",
-		"Git [L]og -40")
+		"Git [l]og -150")
 	map("n",
 		"<leader>gp",
 		"<cmd>Git pull<CR>",
 		{ noremap=true, silent=true },
 		"Git",
 		"git_pull",
-		"Git [P]ull")
+		"Git [p]ull")
 	map("n",
 		"<leader>gu",
 		"<cmd>Git push<CR>",
 		{ noremap=true, silent=true },
 		"Git",
 		"git_push",
-		"Git p[U]sh")
+		"Git p[u]sh")
+
+	map("n",
+		"<leader>gd",
+		"<cmd>Git diff<CR>",
+		{ noremap=true, silent=true },
+		"Git",
+		"git_diff",
+		"Git [d]iff")
+	map("n",
+		"<leader>gD",
+		"<cmd>Git diff --staged<CR>",
+		{ noremap=true, silent=true },
+		"Git",
+		"git_diff_staged",
+		"Git [D]iff --staged")
+	map("n",
+		"<leader>gC",
+		"<cmd>Git checkout -- %<CR>",
+		{ noremap=true, silent=true },
+		"Git",
+		"git_checkout_current",
+		"Git [C]heckout -- %")
+	map("n",
+		"<leader>gS",
+		"<cmd>Git stash<CR>",
+		{ noremap=true, silent=true },
+		"Git",
+		"git_stash",
+		"Git [S]tash")
+	map("n",
+		"<leader>gP",
+		"<cmd>Git stash pop<CR>",
+		{ noremap=true, silent=true },
+		"Git",
+		"git_stash_pop",
+		"Git stash [P]op")
+end
+
+
+function M.buffers()
+	wk.register({ ["b"] = { name = "+buffers" } }, { prefix = "<leader>" })
+
+	map("n",
+		"<leader>bd",
+		"<cmd>bd<CR>",
+		{ noremap=true, silent=true },
+		"buffer",
+		"buffer_close",
+		"Unloa[d] current buffer")
+	map("n",
+		"<leader>bw",
+		"<cmd>bw<CR>",
+		{ noremap=true, silent=true },
+		"buffer",
+		"buffer_wipeout",
+		"[w]ipeout the buffer")
+	map("n",
+		"<leader>bn",
+		"<cmd>bn<CR>",
+		{ noremap=true, silent=true },
+		"buffer",
+		"buffer_next",
+		"[n]ext buffer")
+	map("n",
+		"<leader>bp",
+		"<cmd>bp<CR>",
+		{ noremap=true, silent=true },
+		"buffer",
+		"buffer_perevious",
+		"[p]revious buffer")
+	map("n",
+		"<leader>bl",
+		"<cmd>Telescope buffers<CR>",
+		{ noremap=true, silent=true },
+		"buffer",
+		"buffer_list",
+		"Buffer [l]ist")
+
+end
+
+function M.test()
+
+	wk.register({ ["t"] = { name = "+tests" } }, { prefix = "<leader>" })
+
+	map("n",
+		"<leader>ts",
+		"<cmd>Neotest summary<CR>",
+		{ noremap=true, silent=true },
+		"neotest",
+		"neotest_summary",
+		"Neotest summary")
+
+	map("n",
+		"<leader>to",
+		"<cmd>Neotest output<CR>",
+		{ noremap=true, silent=true },
+		"neotest",
+		"neotest_output",
+		"Neotest [o]utput")
+	map("n",
+		"<leader>tp",
+		"<cmd>Neotest output-panel<CR>",
+		{ noremap=true, silent=true },
+		"neotest",
+		"neotest_output_panel",
+		"Neotest output [p]anel")
+	map("n",
+		"<leader>tr",
+		"<cmd>Neotest run<CR>",
+		{ noremap=true, silent=true },
+		"neotest",
+		"neotest_run",
+		"Neotest [r]un")
+--[[  summary = {
+    enabled = true,
+    animated = true,
+    follow = true,
+    expand_errors = true,
+    open = "botright vsplit | vertical resize 50",
+    mappings = {
+      expand = { "<CR>", "<2-LeftMouse>" },
+      expand_all = "e",
+      output = "o",
+      short = "O",
+      attach = "a",
+      jumpto = "i",
+      stop = "u",
+      run = "r",
+      debug = "d",
+      mark = "m",
+      run_marked = "R",
+      debug_marked = "D",
+      clear_marked = "M",
+      target = "t",
+      clear_target = "T",
+      next_failed = "J",
+      prev_failed = "K",
+      watch = "w",
+    },
+  },
+	--]]
 end
 
 function M.hunk()

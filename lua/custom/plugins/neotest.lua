@@ -5,7 +5,8 @@ return {
         "antoinemadec/FixCursorHold.nvim",
         "nvim-treesitter/nvim-treesitter",
         "nvim-neotest/neotest-python",
-        "mortepau/codicons.nvim"
+        "mortepau/codicons.nvim",
+        "nvim-neotest/nvim-nio" 
 
 
     },

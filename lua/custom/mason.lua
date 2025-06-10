@@ -58,7 +58,7 @@ local servers = {
     pylsp = {
       plugins = {
 	pycodestyle = {
-	  ignore = {'W391', 'W191'},
+	  ignore = {'W391', 'W191', 'E501'},
 	  maxLineLength = 130
 	},
 	ruff = {
@@ -72,7 +72,7 @@ local servers = {
 	  unsafeFixes = false,  -- Whether or not to offer unsafe fixes as code actions. Ignored with the "Fix All" action
 
 	  -- Rules that are ignored when a pyproject.toml or ruff.toml is present:
-	  lineLength = 100,  -- Line length to pass to ruff checking and formatting
+	  lineLength = 120,  -- Line length to pass to ruff checking and formatting
 	  exclude = { "__about__.py" },  -- Files to be excluded by ruff checking
 	  select = { "F" },  -- Rules to be enabled by ruff
 	  ignore = { "D210", "W191" },  -- Rules to be ignored by ruff

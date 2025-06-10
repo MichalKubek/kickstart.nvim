@@ -21,12 +21,76 @@ function M.setup()
 	M.hunk()
 	M.test()
 	M.buffers()
+	M.document()
+end
+
+function M.document()
+
+--  map('n',
+--		'<leader>D',
+--		require('telescope.builtin').lsp_type_definitions, 
+--		{ noremap = true},
+--		"Document",
+--		"document_type_definition",
+--		'Type [D]efinition')
+	map("n",
+		"<leader>dd",
+		"<cmd>:windo diffthis<CR>a",
+		{ noremap=true, silent=true },
+		"Document",
+		"document_diff",
+		"[d]ocument [d]iff")
 end
 
 
 
 function M.tabs()
 
+
+	map('t',
+		'<C-w>l',
+		'<C-\\><C-n><C-w>l',
+		{ noremap = true},
+		"Console",
+		'console_move_right',
+		"Console")
+	map('t',
+		'<C-w>j',
+		'<C-\\><C-n><C-w>j',
+		{ noremap = true},
+		"Console",
+		'console_move_down',
+		"Console")
+	map('t',
+		'<C-w>k',
+		'<C-\\><C-n><C-w>k',
+		{ noremap = true},
+		"Console",
+		'console_move_up',
+	"Console")
+	map('t',
+		'<C-w>h',
+		'<C-\\><C-n><C-w>h',
+		{ noremap = true},
+		"Console",
+		'console_move_left',
+	"Console ")
+	map('t',
+		'<C-[>',
+		'<C-\\><C-n>',
+		{ noremap = false}      ,
+		"Console",
+		'console_exit',
+		"Console"
+		)
+
+	map("n",
+		",c",
+		"<cmd>terminal<CR>a",
+		{ noremap=true, silent=true },
+		"Terminal",
+		"terminal_create_new",
+		"create terminal")
 	map("n",
 		",t",
 		"<cmd>tab split<CR>",
@@ -168,6 +232,7 @@ function M.projects()
 		"git_files",
 		"Find file in project")
 
+
 	-- <SPC>pw: change working directory
 	map("n",
 		"<leader>pw",
@@ -176,6 +241,8 @@ function M.projects()
 		"Projects",
 		"change_working_directory",
 		"Change working directory")
+
+	-- <SPC>pf: find file in project
 
 end
 
@@ -189,7 +256,7 @@ function M.files()
 	-- <SPC>fe: file explorer
 	map("n",
 		"<leader>fe",
-		"<cmd>lua require('nvim-tree').tree.toggle()<CR>",
+		"<cmd>lua require('nvim-tree.api').tree.toggle()<CR>",
 		{ noremap=true, silent=true },
 		"Files",
 		"file_explorer",
@@ -266,6 +333,27 @@ function M.files()
 		"Files",
 		"string_grep",
 		"Grep for word under cursor in current file")
+	map("n",
+		"<leader>fc",
+		"<cmd>lua require('custom.telescope').search_current_directory()<CR>",
+		{ noremap=true, silent=true },
+		"Files",
+		"string_grep_directory",
+		"Grep in current directory")
+	map("n",
+		"<leader>fC",
+		"<cmd>lua require('custom.telescope').search_current_directory({ default_text = vim.fn.expand('<cword>') })<CR>",
+		{ noremap=true, silent=true },
+		"Files",
+		"string_grep_directory_word",
+		"Grep word under cursor in current directory")
+	map("n",
+		"<leader>#",
+		"<cmd>lua require('custom.telescope').search_current_directory({ default_text = vim.fn.expand('<cword>') })<CR>",
+		{ noremap=true, silent=true },
+		"Files",
+		"string_grep_directory_word_2",
+		"Grep word under cursor in current directory")
 
 end
 
@@ -446,6 +534,20 @@ function M.test()
 		"neotest",
 		"neotest_run",
 		"Neotest [r]un")
+	map("n",
+		"<leader>tf",
+		"<cmd>Neotest run file<CR>",
+		{ noremap=true, silent=true },
+		"neotest",
+		"neotest_run_file",
+		"Neotest run tests in [f]ile")
+	map("n",
+		"<leader>tl",
+		"<cmd>Neotest run last<CR>",
+		{ noremap=true, silent=true },
+		"neotest",
+		"neotest_run_last",
+		"Neotest run [l]ast tests")
 --[[  summary = {
     enabled = true,
     animated = true,
@@ -458,7 +560,7 @@ function M.test()
       output = "o",
       short = "O",
       attach = "a",
-      jumpto = "i",
+      jumpto = "i"f
       stop = "u",
       run = "r",
       debug = "d",

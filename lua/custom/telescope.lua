@@ -163,7 +163,7 @@ end
 
 function M.open_file_browser()
   local Path = require("plenary.path")
-  local path = vim.api.nvim_buf_get_name(0)
+  local path = vim.fn.expand('%:p')
   if path ~= '' then
     path = Path:new(path):parent()["filename"]
   else
@@ -172,9 +172,10 @@ function M.open_file_browser()
   require("telescope").extensions.file_browser.file_browser({ cwd = path })
 end
 
+
 function M.search_current_directory(opts)
   local Path = require("plenary.path")
-  local path = vim.api.nvim_buf_get_name(0)
+  local path = vim.fn.expand('%:p')
   if path ~= '' then
     path = Path:new(path):parent()["filename"]
 

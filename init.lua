@@ -41,6 +41,8 @@ P.S. You can delete this when you're done too. It's your config now :)
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
+--
+-- disable netrw at the very start of your init.lua
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 --vim.opt.guifont='SauceCodePro Nerd Font'
@@ -103,8 +105,8 @@ require('lazy').setup({
     'hrsh7th/nvim-cmp',
     dependencies = {
       -- Snippet Engine & its associated nvim-cmp source
-      'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
+--      'L3MON4D3/LuaSnip',
+--      'saadparwaiz1/cmp_luasnip',
 
       -- Adds LSP completion capabilities
       'hrsh7th/cmp-nvim-lsp',
@@ -607,16 +609,11 @@ mason_lspconfig.setup_handlers {
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
-local luasnip = require 'luasnip'
-require('luasnip.loaders.from_vscode').lazy_load()
-luasnip.config.setup {}
+-- local luasnip = require 'luasnip'
+-- require('luasnip.loaders.from_vscode').lazy_load()
+-- luasnip.config.setup {}
 
 cmp.setup {
-  snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end,
-  },
   completion = {
     completeopt = 'menu,menuone,noinsert',
   },
@@ -634,24 +631,18 @@ cmp.setup {
 --      if cmp.visible() then
 --        cmp.select_next_item()
 --      elseif
-      if luasnip.expand_or_locally_jumpable() then
-        luasnip.expand_or_jump()
-      else
         fallback()
-      end
     end, { 'i', 's' }),
     ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif luasnip.locally_jumpable(-1) then
-        luasnip.jump(-1)
       else
         fallback()
       end
     end, { 'i', 's' }),
   },
   sources = {
-    { name = 'luasnip' },
+--    { name = 'luasnip' },
     { name = 'nvim_lsp' },
     { name = 'path' },
   },
@@ -664,16 +655,53 @@ vim.wo.relativenumber = true
 vim.opt.spelllang = 'en_us'
 vim.opt.spell = true
 -- #require('custom.keymaps').setup()
-local ls = require("luasnip")
-ls.filetype_extend("all", { "_" })
+-- local ls = require("luasnip")
+-- ls.filetype_extend("all", { "_" })
+-- 
 
-
-require("luasnip.loaders.from_snipmate").load() -- { include = { "c" } }) -- Load only python snippets
---require("luasnip.loaders.from_snipmate").load({ path = { "/home/miso/.config/nvim/vim-snippets/snippets" } })
-require("luasnip.loaders.from_snipmate").lazy_load()
+-- require("luasnip.loaders.from_snipmate").load() -- { include = { "c" } }) -- Load only python snippets
+-- --require("luasnip.loaders.from_snipmate").load({ path = { "/home/miso/.config/nvim/vim-snippets/snippets" } })
+-- require("luasnip.loaders.from_snipmate").lazy_load()
 vim.opt.guifont='SauceCodePro Nerd Font:h15'
 ---#vim.opt.guifont='Symbols Nerd Font Mono:style=Regular'
+
+-- Function to switch between header and source files
+function SwitchHeaderSource()
+    local current_file = vim.fn.expand('%')
+    local header_extensions = {'.h'}
+    local source_extensions = {'.cpp', '.cc', '.c'}
+
+    local function find_alternate_file(current_file, from_exts, to_exts)
+        for _, from_ext in ipairs(from_exts) do
+            if current_file:match(from_ext .. '$') then
+                for _, to_ext in ipairs(to_exts) do
+                    local alternate_file = current_file:gsub(from_ext .. '$', to_ext)
+                    if vim.fn.filereadable(alternate_file) == 1 then
+                        return alternate_file
+                    end
+                end
+            end
+        end
+        return nil
+    end
+
+    local alternate_file = find_alternate_file(current_file, source_extensions, header_extensions)
+    if not alternate_file then
+        alternate_file = find_alternate_file(current_file, header_extensions, source_extensions)
+    end
+
+    if alternate_file then
+        vim.cmd('edit ' .. alternate_file)
+    else
+        print('Alternate file not found')
+    end
+end
+
+-- Map F12 to the SwitchHeaderSource function
+vim.api.nvim_set_keymap('n', '<F12>', ':lua SwitchHeaderSource()<CR>', { noremap = true, silent = true })
 
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
+--

@@ -6,20 +6,36 @@ return {
         "nvim-treesitter/nvim-treesitter",
         "nvim-neotest/neotest-python",
         "mortepau/codicons.nvim",
-        "nvim-neotest/nvim-nio" 
-
+        "nvim-neotest/nvim-nio",
+        "alfaix/neotest-gtest",
+        "rouge8/neotest-rust",
 
     },
     config = function ()
         require("neotest").setup({
             adapters = {
+                require("neotest-gtest").setup({}),
+                require("neotest-rust") {
+                    -- Optional args passed to rust-analyzer
+                    --                    command = "cargo test",
+                    -- Optional path to cargo binary
+                    -- Optional path to rust-analyzer binary
+                    rust_analyzer_cmd = "rust-analyzer",
+                    use_cargo_nextest = false,
+                    dap = {
+                        type = "executable",
+                        command = "lldb-vscode",
+                        name = "lldb",
+                        justMyCode = false
+                    },
+                },
                 require("neotest-python")({
                     -- Extra arguments for nvim-dap configuration
                     -- See https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for values
                     dap = { justMyCode = false },
                     -- Command line arguments for runner
                     -- Can also be a function to return dynamic values
-                    args = {"--log-level", "DEBUG", "--run-slow", "-v"},
+                    args = {"--log-level", "INFO", "-vvs"},
                     -- Runner to use. Will use pytest if available by default.
                     -- Can be a function to return dynamic value.
                     runner = "pytest",

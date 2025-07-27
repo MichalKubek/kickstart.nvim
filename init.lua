@@ -649,7 +649,7 @@ cmp.setup {
 }
 
 require('custom.mason').setup()
-require('custom.keymaps').setup()
+-- require('custom.keymaps').setup()
 vim.o.hlsearch = true
 vim.wo.relativenumber = true
 vim.opt.spelllang = 'en_us'

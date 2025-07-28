@@ -2,19 +2,16 @@ return {
     "nvim-neotest/neotest",
     dependencies = {
         "nvim-lua/plenary.nvim",
-        "antoinemadec/FixCursorHold.nvim",
         "nvim-treesitter/nvim-treesitter",
         "nvim-neotest/neotest-python",
         "mortepau/codicons.nvim",
         "nvim-neotest/nvim-nio",
-        "alfaix/neotest-gtest",
         "rouge8/neotest-rust",
 
     },
     config = function ()
         require("neotest").setup({
             adapters = {
-                require("neotest-gtest").setup({}),
                 require("neotest-rust") {
                     -- Optional args passed to rust-analyzer
                     --                    command = "cargo test",

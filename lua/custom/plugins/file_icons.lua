@@ -2,6 +2,7 @@
 return {
     'nvim-web-devicons',
     dependencies = { 'kyazdani42/nvim-web-devicons' },
+    enabled = vim.g.have_nerd_font,
     setup = function()
 
         require('nvim-web-devicons').setup()
